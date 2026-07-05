@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Lógica Digital — Laboratorio interactivo de compuertas</title>
+  <desc id="desc">Tarjeta social con un circuito AND iluminado y mensajes de práctica, reto y señales SVG.</desc>
+  <defs>
+    <radialGradient id="glow" cx="22%" cy="14%" r="68%">
+      <stop offset="0" stop-color="#2fe6ff" stop-opacity="0.24"/>
+      <stop offset="0.48" stop-color="#102136" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#05070d"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101a2b"/>
+      <stop offset="1" stop-color="#05070d"/>
+    </linearGradient>
+    <pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse">
+      <path d="M42 0H0v42" fill="none" stroke="#9ffbff" stroke-opacity="0.075" stroke-width="1"/>
+    </pattern>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.18 0 0 0 0 0.9 0 0 0 0 1 0 0 0 .5 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect x="48" y="48" width="1104" height="534" rx="42" fill="url(#panel)" stroke="#9ffbff" stroke-opacity="0.26"/>
+
+  <g transform="translate(98 112)">
+    <text x="0" y="0" fill="#42ff9e" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="800" letter-spacing="5">LABORATORIO INTERACTIVO</text>
+    <text x="0" y="104" fill="#f5fbff" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="86" font-weight="900" letter-spacing="-5">Lógica Digital</text>
+    <text x="0" y="166" fill="#9fb3c8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="31" font-weight="600">Aprende compuertas resolviendo circuitos,</text>
+    <text x="0" y="207" fill="#9fb3c8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="31" font-weight="600">siguiendo señales SVG y superando retos.</text>
+    <g transform="translate(0 276)" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="21" font-weight="800">
+      <rect width="184" height="52" rx="26" fill="#2fe6ff" fill-opacity="0.09" stroke="#9ffbff" stroke-opacity="0.28"/>
+      <text x="28" y="34" fill="#dffcff">Práctica guiada</text>
+      <rect x="204" width="138" height="52" rx="26" fill="#42ff9e" fill-opacity="0.09" stroke="#42ff9e" stroke-opacity="0.3"/>
+      <text x="232" y="34" fill="#dcffe9">Modo reto</text>
+      <rect x="362" width="154" height="52" rx="26" fill="#ffd166" fill-opacity="0.1" stroke="#ffd166" stroke-opacity="0.32"/>
+      <text x="389" y="34" fill="#fff0c2">Puntos + racha</text>
+    </g>
+  </g>
+
+  <g transform="translate(710 134)" filter="url(#softGlow)">
+    <path d="M0 96h116M0 300h116M302 198h130" fill="none" stroke="#2fe6ff" stroke-width="10" stroke-linecap="round"/>
+    <path d="M116 44h104c100 0 162 64 162 154s-62 154-162 154H116Z" fill="#09111e" stroke="#9ffbff" stroke-width="8" stroke-linejoin="round"/>
+    <circle cx="0" cy="96" r="22" fill="#42ff9e"/>
+    <circle cx="0" cy="300" r="22" fill="#2fe6ff"/>
+    <circle cx="438" cy="198" r="28" fill="#ffd166"/>
+    <text x="164" y="222" fill="#f5fbff" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="76" font-weight="900">AND</text>
+    <circle cx="60" cy="96" r="10" fill="#ffd166"/>
+    <circle cx="238" cy="198" r="10" fill="#ffd166"/>
+    <circle cx="372" cy="198" r="10" fill="#ffd166"/>
+  </g>
+</svg>
