@@ -138,6 +138,29 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
+  it("uses circuit input nodes as the primary controls", async () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /entrar a práctica/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /nivel 1: compuerta and/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/toca los nodos de entrada/i)).toBeInTheDocument();
+    expect(screen.queryByText(/valor 1/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/valor 0/i)).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /nodo de entrada b.*apagada/i }),
+    );
+
+    expect(
+      screen.getByRole("button", { name: /nodo de entrada b.*encendida/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/salida encendida/i)).toBeInTheDocument();
+  });
+
   it("shows structured educational feedback in practice mode", async () => {
     render(<App />);
 

@@ -230,33 +230,12 @@ export function LevelScreen({
               level={level}
               pulse={pulse}
               result={result}
+              onToggleInput={onToggleInput}
             />
-
-            <div className="level-controls" aria-label="Entradas del circuito">
-              {level.inputs.map((input) => {
-                const isOn = Boolean(inputStates[input]);
-
-                return (
-                  <button
-                    aria-pressed={isOn}
-                    className={`level-input-card ${isOn ? "is-on" : ""}`}
-                    key={input}
-                    type="button"
-                    onClick={() => onToggleInput(input)}
-                  >
-                    <span className="level-input-key">{input}</span>
-                    <span className="level-input-copy">
-                      <strong>Entrada {input}</strong>
-                      <span>
-                        {isOn ? "Encendida" : "Apagada"} · valor{" "}
-                        {formatValue(isOn)}
-                      </span>
-                    </span>
-                    <i className="level-switch" aria-hidden="true" />
-                  </button>
-                );
-              })}
-            </div>
+            <p className="level-board-hint">
+              Toca los nodos de entrada dentro del circuito para cambiar la
+              señal.
+            </p>
           </section>
 
           <aside

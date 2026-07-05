@@ -14,6 +14,7 @@ type CircuitBoardProps = {
   level: LevelDefinition;
   pulse: "miss" | "success" | null;
   result: boolean;
+  onToggleInput: (input: InputName) => void;
 };
 
 type GateNodeProps = {
@@ -400,27 +401,73 @@ function renderFallbackBoard(
   return renderChallengeBoard(level, inputStates, result);
 }
 
+function getInputNodeHotspots(level: LevelDefinition) {
+  const yPositions =
+    level.gates.length === 1
+      ? level.inputs.length === 1
+        ? oneInputYPositions
+        : twoInputYPositions
+      : getInputYPositions(level.inputs.length);
+
+  return level.inputs.map((input, index) => ({
+    input,
+    x: 88,
+    y: yPositions[index] ?? 220,
+  }));
+}
+
 export function CircuitBoard({
   heading,
   inputStates,
   level,
   pulse,
   result,
+  onToggleInput,
 }: CircuitBoardProps) {
   const outputText = formatValue(result);
   const boardContent = renderFallbackBoard(level, inputStates, result);
+  const inputHotspots = getInputNodeHotspots(level);
 
   return (
     <div className={`level-board ${pulse ? `is-${pulse}-pulse` : ""}`}>
-      <svg
-        viewBox="0 0 860 480"
-        role="img"
-        aria-label={`${heading}. Salida actual ${outputText}. Entradas: ${level.inputs
-          .map((input) => `${input} igual ${formatValue(inputStates[input])}`)
-          .join(", ")}.`}
-      >
-        {boardContent}
-      </svg>
+      <div className="level-board-stage">
+        <svg
+          viewBox="0 0 860 480"
+          role="img"
+          aria-label={`${heading}. Salida actual ${outputText}. Entradas: ${level.inputs
+            .map((input) => `${input} igual ${formatValue(inputStates[input])}`)
+            .join(", ")}.`}
+        >
+          {boardContent}
+        </svg>
+        <div
+          className="level-node-hotspots"
+          role="group"
+          aria-label="Controles del circuito"
+        >
+          {inputHotspots.map(({ input, x, y }) => {
+            const isOn = Boolean(inputStates[input]);
+            const nextState = isOn ? "apagar" : "encender";
+
+            return (
+              <button
+                aria-label={`Nodo de entrada ${input} ${isOn ? "encendida" : "apagada"}. Tocar para ${nextState}.`}
+                aria-pressed={isOn}
+                className={`level-node-hotspot ${isOn ? "is-on" : ""}`}
+                key={input}
+                style={{
+                  left: `${(x / 860) * 100}%`,
+                  top: `${(y / 480) * 100}%`,
+                }}
+                type="button"
+                onClick={() => onToggleInput(input)}
+              >
+                <span>{input}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
