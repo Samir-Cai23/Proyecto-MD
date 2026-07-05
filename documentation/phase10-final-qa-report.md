@@ -72,8 +72,18 @@ Resultados esperados al cierre:
 - Audit: `0 vulnerabilities`.
 - `git diff --check`: solo puede mostrar el warning esperado de CRLF en `index.html`.
 
-## Pendiente operativo
+## GitHub handoff
 
-- Commit y push de `feature/ui-ux-v2`.
-- Crear PR final hacia `main` con resumen, checklist y URL Vercel.
-- Después del merge, Vercel debe publicar producción desde GitHub.
+Rama publicada:
+
+```text
+feature/ui-ux-v2
+```
+
+PR final:
+
+```text
+https://github.com/Sam-24-dev/Logis-Gates-Challenge-Game/pull/1
+```
+
+Después del merge, Vercel debe publicar producción desde GitHub.

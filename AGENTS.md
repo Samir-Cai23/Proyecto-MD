@@ -97,7 +97,7 @@ Flujo obligatorio:
 
 La fuente editable principal está en `documentation/v2-product-implementation-plan.md`.
 
-Estado actualizado tras Fase 9:
+Estado actualizado tras Fase 10:
 
 | Fase | Nombre | Estado |
 | --- | --- | --- |
@@ -111,7 +111,7 @@ Estado actualizado tras Fase 9:
 | 7 | Feedback educativo y verdad lógica | Done |
 | 8 | Modo reto, score y progreso | Done |
 | 9 | Vercel deploy y presentación profesional | Done |
-| 10 | QA, accesibilidad, performance y PR final | In progress |
+| 10 | QA, accesibilidad, performance y PR final | Done |
 
 ## 7. Rama y PR
 

@@ -1006,13 +1006,13 @@ Cerrar V2 con calidad revisable.
 
 ### Definition of Done
 
-- [ ] Tests pasan.
-- [ ] Build pasa.
-- [ ] No overflow móvil.
-- [ ] No errores de consola relevantes.
-- [ ] Accesibilidad base verificada.
-- [ ] PR listo con resumen, screenshots y checklist.
-- [ ] Engram actualizado.
+- [x] Tests pasan.
+- [x] Build pasa.
+- [x] No overflow móvil.
+- [x] No errores de consola relevantes.
+- [x] Accesibilidad base verificada.
+- [x] PR listo con resumen, screenshots y checklist.
+- [x] Engram actualizado.
 
 ## 18. Phase tracker
 
@@ -1030,7 +1030,7 @@ Este tracker debe actualizarse al finalizar cada fase.
 | 7 | Feedback educativo y verdad lógica | Done | Práctica muestra lectura/regla/pista/filas objetivo con lógica pura testeada; reto conserva feedback breve sin tabla de verdad durante intentos. |
 | 8 | Modo reto, score y progreso | Done | Timer, score, streak, submit, resultados, progreso local seguro y mejor score/racha con `localStorage` implementados y validados. |
 | 9 | Vercel deploy y presentación profesional | Done | Metadata/SEO, README V2, assets públicos, `vercel.json`, Open Design artifact y deployment Vercel completados; preview `https://logis-gates-challenge-game-6fr2amh8d-sam-24-devs-projects.vercel.app`. |
-| 10 | QA, accesibilidad, performance y PR final | In progress | QA final iniciado: responsive, accesibilidad, performance, GitHub/Vercel y PR final en revisión. |
+| 10 | QA, accesibilidad, performance y PR final | Done | QA final completado; GitHub Pages desactivado; PR final creado: https://github.com/Sam-24-dev/Logis-Gates-Challenge-Game/pull/1; Engram actualizado. |
 
 Estados permitidos:
 
