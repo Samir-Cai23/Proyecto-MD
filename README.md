@@ -1,131 +1,113 @@
-# Logic Gates Challenge Game
+# Lógica Digital — Digital Logic Lab
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?style=for-the-badge&logo=github&logoColor=white)
+**Lógica Digital** es un laboratorio interactivo para aprender compuertas lógicas resolviendo circuitos, siguiendo señales SVG y superando retos con puntos, racha y progreso guardado.
 
-[![Logic Gates Challenge Game overview](assets/overview.png)](https://sam-24-dev.github.io/Logis-Gates-Challenge-Game/)
+La V2 convierte el juego original en una experiencia educativa más clara, responsive y lista para presentarse como producto de portafolio.
 
-**Logic Gates Challenge Game** is an interactive educational web game designed to help learners understand and practice digital logic gates. Through progressive levels and live circuit visualization, players can explore how binary inputs combine to produce the correct output.
+## Vista rápida
 
-## 🎮 Live Demo
-
-Play the online version here:
-
-[▶️ Open Logic Gates Challenge Game](https://sam-24-dev.github.io/Logis-Gates-Challenge-Game/)
-
-## 🧠 About the Game
-
-This game was created as a teaching tool for students and digital logic enthusiasts. The goal is simple: toggle the inputs for each circuit, watch the output, and match the required result to complete the level.
-
-As players progress, the circuits become more complex and challenging.
-
-## 🖼️ Application Views
-
-| Welcome Screen | Difficulty Selection |
+| Área | Estado V2 |
 | --- | --- |
-| ![Welcome screen](assets/welcome.png) | ![Difficulty selection](assets/difficulty.png) |
+| Stack | Vite + React + TypeScript |
+| Circuitos | SVG responsive |
+| Modos | Práctica guiada y reto |
+| Tests | Vitest para lógica y flujo principal |
+| Deploy | Preparado para Vercel (`dist`) |
 
-## ✨ Key Features
+## Qué puedes hacer
 
-- Interactive logic gate challenges.
-- Progressive level system.
-- Two difficulty modes: **Easy** and **Hard**.
-- Real-time output updates.
-- Clear circuit visualization.
-- Immediate feedback.
-- Input buttons with **ON/OFF** states.
-- Output LED indicator.
-- Option to retry a level or return to the menu.
-- Fully browser-based; no installation required.
+- Practicar compuertas **AND**, **OR**, **NOT**, **XOR**, **NAND**, **NOR** y **XNOR**.
+- Cambiar entradas binarias y ver cómo viaja la señal por el circuito.
+- Aprender con feedback educativo y tablas de verdad en modo práctica.
+- Jugar un modo reto con tiempo, puntos, racha y resultados.
+- Retomar tu avance desde el mismo dispositivo.
 
-## 🎯 Difficulty Modes
+## Ejecutar localmente
 
-| Mode | Description | Gates and Circuits |
-| --- | --- | --- |
-| **Easy** | Perfect for beginners learning basic logic gates. | **AND**, **OR**, **XOR**, **NAND** |
-| **Hard** | Designed for players looking for a greater challenge. | Combined circuits such as **XOR + NOT + AND** and **AND + NAND + XOR** |
+```sh
+npm install
+npm run dev
+```
 
-## ⚙️ How It Works
+Comandos útiles:
 
-1. Select a difficulty level.
-2. Observe the circuit and its inputs, such as **A**, **B**, **C**, or **D**.
-3. Toggle the input buttons.
-4. Watch the output indicator **Y**.
-5. Find the correct input combination to match the required output.
-6. Advance to the next level or retry if needed.
+```sh
+npm run test
+npm run lint
+npm run build
+npm run preview
+```
 
-## 🧰 Technologies Used
+## Deploy en Vercel
 
-- **HTML5** – game structure.
-- **CSS3** – styling and visual design.
-- **JavaScript** – game logic and interactivity.
-- **GitHub Pages** – online deployment.
-
-## 📁 Project Structure
+URL pública actual:
 
 ```text
-Logis-Gates-Challenge-Game/
-├── assets/
-│   ├── overview.png
-│   ├── welcome.png
-│   └── difficulty.png
-├── index.html
-├── styles.css
-├── Proyecto MD.js
-└── README.md
+https://logis-gates-challenge-game.vercel.app/
 ```
 
-## 🗂️ Main Files
+Vercel es el deploy oficial de la V2. GitHub Pages quedó fuera del flujo para evitar mantener dos versiones públicas distintas.
 
-| File | Purpose |
+La app es una SPA de Vite. La configuración esperada está en `vercel.json`:
+
+| Campo | Valor |
 | --- | --- |
-| `index.html` | Contains the welcome screen, difficulty selection, game layout, inputs, output indicator, and navigation buttons. |
-| `styles.css` | Defines the visual design, layout, buttons, circuit elements, and LED states. |
-| `Proyecto MD.js` | Handles the game logic, levels, input states, output calculation, feedback, and level navigation. |
+| Framework | `vite` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
 
-## 🚀 Run Locally
+Deploy preview con Vercel CLI:
 
-No installation or external dependencies are required.
-
-1. **Clone the repository:**
-
-```bash
-git clone https://github.com/Sam-24-dev/Logis-Gates-Challenge-Game.git
+```sh
+vercel deploy . -y
 ```
 
-2. **Open the project folder:**
+## Arquitectura
 
-```bash
-cd Logis-Gates-Challenge-Game
+```text
+src/
+├── app/              # Orquestación principal de pantallas y progreso
+├── components/       # Componentes reutilizables, incluido CircuitBoard SVG
+├── core/             # Lógica pura: evaluación, scoring, feedback, progreso
+├── data/             # Definición declarativa de niveles y compuertas
+├── screens/          # Welcome, selección de modo, niveles y resultados
+└── styles/           # Tokens, base, layout y componentes visuales
 ```
 
-3. **Run the game:**
+Decisiones principales:
 
-Open `index.html` in your browser.
+- La lógica de compuertas vive fuera de React para poder testearla sin DOM.
+- Los circuitos se renderizan con SVG para mantener claridad visual y buen rendimiento.
+- El progreso usa persistencia liviana en el dispositivo; no hay backend, login ni ranking online.
+- Las animaciones están limitadas a señales, feedback y comprensión del circuito.
 
-## 📌 Educational Purpose
+## Calidad esperada
 
-This project helps users understand how digital logic gates work by interacting directly with binary inputs and circuit outputs. It is useful for practicing Boolean logic, digital circuits, and introductory discrete mathematics concepts.
+Antes de publicar o abrir PR:
 
-## 🔮 Future Improvements
+```sh
+npm run test
+npm run lint
+npm run build
+npm audit --audit-level=high
+git --no-pager diff --check
+```
 
-- Add more levels and gate combinations.
-- Add truth tables for each level.
-- Improve mobile responsiveness.
-- Add a scoring system.
-- Add a timer or challenge mode.
-- Add animations for signal flow.
-- Add explanations for each logic gate.
-- Rename `Proyecto MD.js` to a standard filename such as `script.js`.
-- Improve accessibility with keyboard controls and ARIA labels.
+También se recomienda revisar manualmente:
 
-## 👨‍💻 Author
+- Mobile: `320px` y `375px`.
+- Tablet: `768px`.
+- Desktop: `1024px`, `1365px` y `1440px`.
+- Consola del navegador sin errores relevantes.
+- Navegación con teclado y foco visible.
+- Preferencia de movimiento reducido.
 
-Developed by **Sam-24-dev**.  
-Created with ❤️ for digital logic learning.
+## Documentación del rediseño
 
-## 📜 License
+- Plan maestro: `documentation/v2-product-implementation-plan.md`.
+- Análisis inicial del repo: `documentation/repository-analysis.md`.
+- Prototipos y planes por pantalla/fase: `documentation/prototypes/`.
 
-This project is open source and available for educational purposes under the MIT License.
+## Autor
+
+Desarrollado por **Sam-24-dev** como proyecto educativo de lógica digital.
