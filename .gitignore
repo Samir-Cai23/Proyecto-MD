@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+.vite/
+.playwright-mcp/
+*.tsbuildinfo
+phase*-vite-*.log
+.DS_Store
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# Local AI/runtime state
+.atl/
+.agents/
+skills-lock.json
+
+.vercel

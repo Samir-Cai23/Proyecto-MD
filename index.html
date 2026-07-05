@@ -1,48 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logic Gates Challenge</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Aprende compuertas lógicas resolviendo circuitos interactivos, siguiendo señales SVG y superando retos con puntos, racha y progreso."
+        />
+        <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:160"
+        />
+        <meta name="application-name" content="Lógica Digital" />
+        <meta name="apple-mobile-web-app-title" content="Lógica Digital" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#05070d" />
+        <link
+            rel="canonical"
+            href="https://logis-gates-challenge-game.vercel.app/"
+        />
 
-    <!-- Pantalla de introducción -->
-    <div class="intro-screen" id="intro-screen">
-        <h2>Bienvenido al Logic Gates Challenge</h2>
-        <p>¡Prepárate para resolver desafíos lógicos y mejorar tus habilidades!</p>
-        <button class="input-button" onclick="showLevelSelection()">Continuar</button>
-    </div>
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="es_ES" />
+        <meta property="og:site_name" content="Lógica Digital" />
+        <meta
+            property="og:url"
+            content="https://logis-gates-challenge-game.vercel.app/"
+        />
+        <meta
+            property="og:title"
+            content="Lógica Digital — Laboratorio interactivo de compuertas"
+        />
+        <meta
+            property="og:description"
+            content="Aprende compuertas resolviendo circuitos, siguiendo señales SVG y superando retos con puntos, racha y progreso."
+        />
+        <meta
+            property="og:image"
+            content="https://logis-gates-challenge-game.vercel.app/social-preview.svg"
+        />
+        <meta property="og:image:type" content="image/svg+xml" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+            property="og:image:alt"
+            content="Lógica Digital, laboratorio interactivo con un circuito AND iluminado"
+        />
 
-    <!-- Pantalla de selección de nivel -->
-    <div class="level-selection" id="level-selection" style="display: none;">
-        <h2>Selecciona el nivel de dificultad para empezar:</h2>
-        <button class="level-button" onclick="startLevel('easy')">Nivel Bajo (Fácil)</button>
-        <button class="level-button" onclick="startLevel('hard')">Nivel Alto (Difícil)</button>
-    </div>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+            name="twitter:title"
+            content="Lógica Digital — Laboratorio interactivo de compuertas"
+        />
+        <meta
+            name="twitter:description"
+            content="Practica lógica digital con circuitos SVG, señales animadas, retos, puntos y racha."
+        />
+        <meta
+            name="twitter:image"
+            content="https://logis-gates-challenge-game.vercel.app/social-preview.svg"
+        />
+        <meta
+            name="twitter:image:alt"
+            content="Circuito digital retro-futurista de Lógica Digital"
+        />
 
-    <!-- Contenedor del juego -->
-    <div class="game-container" id="game-container" style="display: none;">
-        <h2 id="level-title">Nivel Bajo - Nivel 1</h2>
-        <div id="circuit-diagram" class="circuit-diagram">
-            <!-- Aquí están las entradas A, B, C, D con clases específicas -->
-            <div class="circuit-gate circuit-input-A">A</div>
-            <div class="circuit-gate circuit-input-B">B</div>
-            <div class="circuit-gate circuit-input-C">C</div>
-            <div class="circuit-gate circuit-input-D">D</div>
-        </div>
-        <p>Manipula las entradas y observa el resultado:</p>
-        <div id="buttons-container"></div>
-        <div class="output-led off" id="output">0</div>
-        <div class="feedback" id="feedback"></div>
-        <button class="retry-button" id="retry-level" style="display: none;" onclick="retryLevel()">Volver a Jugar</button>
-        <button class="next-level-button" id="next-level" style="display: none;" onclick="startNextLevel()">Avanzar al Siguiente Nivel</button>
-        <button class="input-button" id="go-back-menu" style="display: none;" onclick="goBackToLevelSelection()">Regresar al Menú Principal</button>
-    </div>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <title>Lógica Digital — Laboratorio interactivo de compuertas</title>
 
-    <!-- Incluir el archivo JavaScript -->
-    <script src="Proyecto MD.js"></script>
-
-</body>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                "name": "Lógica Digital",
+                "alternateName": "Digital Logic Lab",
+                "description": "Laboratorio educativo para aprender compuertas lógicas con circuitos interactivos, señales SVG, práctica guiada y modo reto.",
+                "url": "https://logis-gates-challenge-game.vercel.app/",
+                "image": "https://logis-gates-challenge-game.vercel.app/social-preview.svg",
+                "applicationCategory": "EducationalApplication",
+                "operatingSystem": "Any",
+                "inLanguage": "es",
+                "isAccessibleForFree": true,
+                "educationalUse": ["practice", "assessment"],
+                "learningResourceType": "interactive simulation",
+                "audience": {
+                    "@type": "EducationalAudience",
+                    "educationalRole": "student"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
 </html>
