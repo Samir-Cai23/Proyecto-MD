@@ -214,8 +214,12 @@ export function LevelScreen({
               >
                 <span>Progreso</span>
                 <strong>{progress}%</strong>
-                <div className="level-progress-bar" aria-hidden="true">
-                  <i style={{ width: `${progress}%` }} />
+                <div
+                  className="level-progress-bar"
+                  data-progress={progress}
+                  aria-hidden="true"
+                >
+                  <i />
                 </div>
               </aside>
             </div>
