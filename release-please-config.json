@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "30fd0486735147121317cdceb7fa2c19c4e726c7",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "logic-gates-challenge-game",
+      "changelog-path": "CHANGELOG.md",
+      "include-v-in-tag": true,
+      "extra-files": ["package.json", "package-lock.json"]
+    }
+  }
+}
