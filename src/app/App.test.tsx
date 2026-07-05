@@ -75,14 +75,14 @@ describe("App", () => {
     expect(screen.queryByText(/registro local/i)).not.toBeInTheDocument();
   });
 
-  it("starts the challenge route with HUD, no truth table, and visible combined gates", () => {
+  it("starts the challenge route with HUD, no truth table, and visible combined gates", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
     fireEvent.click(screen.getByRole("button", { name: /iniciar reto/i }));
 
     expect(
-      screen.getByRole("heading", { name: /reto 1: XOR bajo presión/i }),
+      await screen.findByRole("heading", { name: /reto 1: XOR bajo presión/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/tiempo/i)).toBeInTheDocument();
     expect(screen.getByText(/puntos/i)).toBeInTheDocument();
@@ -100,13 +100,13 @@ describe("App", () => {
     expect(screen.getAllByText("AND").length).toBeGreaterThan(0);
   });
 
-  it("advances challenge only after submitting a correct output and updates score", () => {
+  it("advances challenge only after submitting a correct output and updates score", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
     fireEvent.click(screen.getByRole("button", { name: /iniciar reto/i }));
 
-    fireEvent.click(screen.getByRole("button", { name: /entrada a/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /entrada a/i }));
     fireEvent.click(screen.getByRole("button", { name: /entrada c/i }));
     fireEvent.click(screen.getByRole("button", { name: /enviar respuesta/i }));
 
@@ -117,12 +117,14 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it("announces brief non-spoiling challenge feedback after an incorrect submission", () => {
+  it("announces brief non-spoiling challenge feedback after an incorrect submission", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
     fireEvent.click(screen.getByRole("button", { name: /iniciar reto/i }));
-    fireEvent.click(screen.getByRole("button", { name: /enviar respuesta/i }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: /enviar respuesta/i }),
+    );
 
     expect(screen.getByText(/pulso de corrección activo/i)).toBeInTheDocument();
     expect(
@@ -136,14 +138,14 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows structured educational feedback in practice mode", () => {
+  it("shows structured educational feedback in practice mode", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
     fireEvent.click(screen.getByRole("button", { name: /entrar a práctica/i }));
 
     expect(
-      screen.getByRole("heading", { name: /nivel 1: compuerta and/i }),
+      await screen.findByRole("heading", { name: /nivel 1: compuerta and/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/lectura actual/i)).toBeInTheDocument();
     expect(screen.getByText(/regla lógica/i)).toBeInTheDocument();
@@ -170,11 +172,12 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it("saves the best challenge score after completing the challenge route", () => {
+  it("saves the best challenge score after completing the challenge route", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
     fireEvent.click(screen.getByRole("button", { name: /iniciar reto/i }));
+    await screen.findByRole("button", { name: /entrada a/i });
 
     solveChallengeLevel(["a", "c"]);
     solveChallengeLevel(["a", "c"]);
@@ -185,7 +188,7 @@ describe("App", () => {
     solveChallengeLevel(["b", "c"]);
 
     expect(
-      screen.getByRole("heading", { name: /reto completado/i }),
+      await screen.findByRole("heading", { name: /reto completado/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/récord guardado/i)).toBeInTheDocument();
     expect(screen.getByText(/mejor marca/i)).toBeInTheDocument();
@@ -201,13 +204,13 @@ describe("App", () => {
     expect(savedProgress.bestChallengeStreak).toBe(7);
   });
 
-  it("shows the results screen after completing the practice route", () => {
+  it("shows the results screen after completing the practice route", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
     fireEvent.click(screen.getByRole("button", { name: /entrar a práctica/i }));
 
-    fireEvent.click(screen.getByRole("button", { name: /entrada b/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /entrada b/i }));
     fireEvent.click(screen.getByRole("button", { name: /continuar/i }));
 
     fireEvent.click(screen.getByRole("button", { name: /entrada a/i }));
@@ -229,7 +232,7 @@ describe("App", () => {
     fireEvent.click(screen.getByRole("button", { name: /continuar/i }));
 
     expect(
-      screen.getByRole("heading", { name: /laboratorio completado/i }),
+      await screen.findByRole("heading", { name: /laboratorio completado/i }),
     ).toBeInTheDocument();
     expect(screen.getByText("7/7")).toBeInTheDocument();
     expect(

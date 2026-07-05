@@ -2118,6 +2118,7 @@
 
 .level-progress-bar i {
     display: block;
+    width: 0;
     height: 100%;
     border-radius: inherit;
     background: linear-gradient(
@@ -2125,6 +2126,34 @@
         var(--color-warm),
         var(--color-accent-strong)
     );
+}
+
+.level-progress-bar[data-progress="14"] i {
+    width: 14%;
+}
+
+.level-progress-bar[data-progress="29"] i {
+    width: 29%;
+}
+
+.level-progress-bar[data-progress="43"] i {
+    width: 43%;
+}
+
+.level-progress-bar[data-progress="57"] i {
+    width: 57%;
+}
+
+.level-progress-bar[data-progress="71"] i {
+    width: 71%;
+}
+
+.level-progress-bar[data-progress="86"] i {
+    width: 86%;
+}
+
+.level-progress-bar[data-progress="100"] i {
+    width: 100%;
 }
 
 .level-board {

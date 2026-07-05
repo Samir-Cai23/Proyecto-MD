@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { evaluateCircuit } from "../core/evaluateCircuit";
 import {
   loadStoredProgress,
@@ -8,9 +8,7 @@ import {
 } from "../core/progress";
 import { calculateChallengeScore } from "../core/scoring";
 import { getFirstLevel, levelsByDifficulty } from "../data/levels";
-import { LevelScreen } from "../screens/LevelScreen";
 import { ModeSelectScreen } from "../screens/ModeSelectScreen";
-import { ResultsScreen } from "../screens/ResultsScreen";
 import { WelcomeScreen } from "../screens/WelcomeScreen";
 import type {
   Difficulty,
@@ -20,7 +18,26 @@ import type {
   Screen,
 } from "./appTypes";
 
+const LevelScreen = lazy(() =>
+  import("../screens/LevelScreen").then((module) => ({
+    default: module.LevelScreen,
+  })),
+);
+const ResultsScreen = lazy(() =>
+  import("../screens/ResultsScreen").then((module) => ({
+    default: module.ResultsScreen,
+  })),
+);
+
 const firstLevel = 1;
+
+function ScreenLoadingFallback() {
+  return (
+    <main className="app-shell" data-screen="loading" aria-busy="true">
+      <p className="screen-kicker">Cargando laboratorio…</p>
+    </main>
+  );
+}
 
 function createInitialInputStates(level: LevelDefinition): InputStates {
   const states = Object.fromEntries(
@@ -291,43 +308,47 @@ export function App() {
 
   if (screen === "results") {
     return (
-      <ResultsScreen
-        challengeSummary={{
-          score: challengeScore,
-          streak: challengeStreak,
-        }}
-        completedDifficulty={difficulty}
-        completedLevels={Object.values(levelsByDifficulty[difficulty])}
-        isNewBestChallengeScore={challengeRunIsBest}
-        progress={storedProgress}
-        onChallenge={() => startLevel("hard")}
-        onHome={goHome}
-        onPracticeAgain={() => startLevel("easy")}
-      />
+      <Suspense fallback={<ScreenLoadingFallback />}>
+        <ResultsScreen
+          challengeSummary={{
+            score: challengeScore,
+            streak: challengeStreak,
+          }}
+          completedDifficulty={difficulty}
+          completedLevels={Object.values(levelsByDifficulty[difficulty])}
+          isNewBestChallengeScore={challengeRunIsBest}
+          progress={storedProgress}
+          onChallenge={() => startLevel("hard")}
+          onHome={goHome}
+          onPracticeAgain={() => startLevel("easy")}
+        />
+      </Suspense>
     );
   }
 
   return (
-    <LevelScreen
-      currentLevel={currentLevel}
-      difficulty={difficulty}
-      inputStates={inputStates}
-      level={activeLevel}
-      result={result}
-      totalLevels={totalLevels}
-      challengeState={{
-        elapsedSeconds,
-        lastPoints: challengeLastPoints,
-        lastWasCorrect: challengeLastWasCorrect,
-        score: challengeScore,
-        streak: challengeStreak,
-        wrongSubmissions: challengeWrongSubmissions,
-      }}
-      onBackToMode={() => setScreen("modeSelection")}
-      onNextLevel={startNextLevel}
-      onRetry={retryLevel}
-      onSubmitAnswer={submitChallengeAnswer}
-      onToggleInput={toggleInput}
-    />
+    <Suspense fallback={<ScreenLoadingFallback />}>
+      <LevelScreen
+        currentLevel={currentLevel}
+        difficulty={difficulty}
+        inputStates={inputStates}
+        level={activeLevel}
+        result={result}
+        totalLevels={totalLevels}
+        challengeState={{
+          elapsedSeconds,
+          lastPoints: challengeLastPoints,
+          lastWasCorrect: challengeLastWasCorrect,
+          score: challengeScore,
+          streak: challengeStreak,
+          wrongSubmissions: challengeWrongSubmissions,
+        }}
+        onBackToMode={() => setScreen("modeSelection")}
+        onNextLevel={startNextLevel}
+        onRetry={retryLevel}
+        onSubmitAnswer={submitChallengeAnswer}
+        onToggleInput={toggleInput}
+      />
+    </Suspense>
   );
 }
