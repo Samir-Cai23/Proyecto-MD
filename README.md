@@ -231,6 +231,8 @@ Out of scope for this V2:
 
 - Master plan: `documentation/v2-product-implementation-plan.md`
 - Repository analysis: `documentation/repository-analysis.md`
+- Release process: `documentation/release-process.md`
+- Future improvements: `documentation/future-improvements.md`
 - Prototype notes: `documentation/prototypes/`
 - Agent/process rules: `AGENTS.md`
 
