@@ -1,69 +1,73 @@
 @font-face {
-  font-family: "Oxanium";
-  font-style: normal;
-  font-weight: 500 700;
-  font-display: swap;
-  src: url("/fonts/oxanium-latin.woff2") format("woff2");
+    font-family: "Oxanium";
+    font-style: normal;
+    font-weight: 500 700;
+    font-display: swap;
+    src: url("/fonts/oxanium-latin.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Share Tech Mono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/share-tech-mono-latin.woff2") format("woff2");
+    font-family: "Share Tech Mono";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/share-tech-mono-latin.woff2") format("woff2");
 }
 
 :root {
-  color-scheme: dark;
+    color-scheme: dark;
 
-  --font-display: "Oxanium", "Segoe UI", sans-serif;
-  --font-mono: "Share Tech Mono", "Cascadia Mono", monospace;
+    --font-display: "Oxanium", "Segoe UI", sans-serif;
+    --font-mono: "Share Tech Mono", "Cascadia Mono", monospace;
 
-  --color-void: #05070d;
-  --color-void-rgb: 5 7 13;
-  --color-panel: #0d1424;
-  --color-panel-rgb: 13 20 36;
-  --color-panel-strong: #121d33;
-  --color-panel-soft: #17243e;
-  --color-grid: rgb(110 249 255 / 0.08);
-  --color-line: rgb(126 240 255 / 0.22);
-  --color-line-strong: rgb(126 240 255 / 0.44);
-  --color-text: #edf8ff;
-  --color-muted: #9fb8c9;
-  --color-dim: #647b8e;
-  --color-accent: #47f3ff;
-  --color-accent-rgb: 71 243 255;
-  --color-accent-strong: #9ffbff;
-  --color-warm: #ffd166;
-  --color-success: #42ff9e;
-  --color-danger: #ff5f7a;
-  --color-danger-rgb: 255 95 122;
-  --color-ink: #061018;
+    --color-void: #080717;
+    --color-void-rgb: 8 7 23;
+    --color-panel: #10152c;
+    --color-panel-rgb: 16 21 44;
+    --color-panel-strong: #151d3a;
+    --color-panel-soft: #1b2750;
+    --color-grid: rgb(110 249 255 / 0.08);
+    --color-line: rgb(126 240 255 / 0.22);
+    --color-line-strong: rgb(126 240 255 / 0.44);
+    --color-text: #edf8ff;
+    --color-muted: #9fb8c9;
+    --color-dim: #647b8e;
+    --color-accent: #47f3ff;
+    --color-accent-rgb: 71 243 255;
+    --color-accent-strong: #9ffbff;
+    --color-violet: #7c5cff;
+    --color-violet-rgb: 124 92 255;
+    --color-warm: #ffd166;
+    --color-warm-rgb: 255 209 102;
+    --color-success: #42ff9e;
+    --color-danger: #ff5f7a;
+    --color-danger-rgb: 255 95 122;
+    --color-ink: #061018;
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.9rem;
-  --radius-lg: 1.4rem;
-  --radius-xl: 2rem;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.9rem;
+    --radius-lg: 1.4rem;
+    --radius-xl: 2rem;
 
-  --border-hairline: 1px solid var(--color-line);
-  --border-panel: 1px solid rgb(126 240 255 / 0.34);
-  --shadow-panel: 0 1.5rem 5rem rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.06);
-  --shadow-glow: 0 0 1.25rem rgb(var(--color-accent-rgb) / 0.28);
-  --shadow-danger: 0 0 1.1rem rgb(var(--color-danger-rgb) / 0.3);
+    --border-hairline: 1px solid var(--color-line);
+    --border-panel: 1px solid rgb(126 240 255 / 0.34);
+    --shadow-panel:
+        0 1.5rem 5rem rgb(0 0 0 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.06);
+    --shadow-glow: 0 0 1.25rem rgb(var(--color-accent-rgb) / 0.28);
+    --shadow-danger: 0 0 1.1rem rgb(var(--color-danger-rgb) / 0.3);
 
-  --content-max: 68rem;
-  --panel-max: 48rem;
-  --motion-fast: 150ms ease;
-  --motion-medium: 260ms ease;
+    --content-max: 68rem;
+    --panel-max: 48rem;
+    --motion-fast: 150ms ease;
+    --motion-medium: 260ms ease;
 }
