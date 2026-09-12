@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CircuitBoard } from "../components/CircuitBoard/CircuitBoard";
 import { getPracticeFeedback } from "../core/feedback";
 import { generateTruthTable } from "../core/truthTable";
@@ -11,10 +11,12 @@ import type {
 
 type ChallengeState = {
   elapsedSeconds: number;
+  hasSubmittedCurrentLevel: boolean;
   lastPoints: number | null;
   lastWasCorrect: boolean | null;
   score: number;
   streak: number;
+  submissionLocked: boolean;
   wrongSubmissions: number;
 };
 
@@ -27,6 +29,7 @@ type LevelScreenProps = {
   totalLevels: number;
   challengeState?: ChallengeState;
   onBackToMode: () => void;
+  onChallengeReady?: () => void;
   onNextLevel: () => void;
   onRetry: () => void;
   onSubmitAnswer?: () => void;
@@ -78,6 +81,7 @@ export function LevelScreen({
   totalLevels,
   challengeState,
   onBackToMode,
+  onChallengeReady,
   onNextLevel,
   onRetry,
   onSubmitAnswer,
@@ -91,15 +95,27 @@ export function LevelScreen({
     : getPracticeFeedback(level, inputStates, result);
   const progress = Math.round((currentLevel / totalLevels) * 100);
   const heading = getLevelHeading(level);
-  const outputText = formatValue(result);
+  const isOutputRevealed =
+    !isChallenge || Boolean(challengeState?.hasSubmittedCurrentLevel);
+  const outputText = isOutputRevealed ? formatValue(result) : "?";
   const targetOutput = "1";
   const [pulse, setPulse] = useState<PulseKind | null>(null);
   const hasMounted = useRef(false);
 
+  useLayoutEffect(() => {
+    if (isChallenge) {
+      onChallengeReady?.();
+    }
+  }, [isChallenge, level.id, onChallengeReady]);
+
   useEffect(() => {
+    if (isChallenge) {
+      return undefined;
+    }
+
     if (!hasMounted.current) {
       hasMounted.current = true;
-      return;
+      return undefined;
     }
 
     setPulse(null);
@@ -114,15 +130,19 @@ export function LevelScreen({
       window.clearTimeout(showPulse);
       window.clearTimeout(hidePulse);
     };
-  }, [currentRowKey, result]);
+  }, [currentRowKey, isChallenge, result]);
 
   useEffect(() => {
-    if (!isChallenge || challengeState?.lastWasCorrect === null) {
+    if (
+      !isChallenge ||
+      !challengeState?.hasSubmittedCurrentLevel ||
+      challengeState.lastWasCorrect === null
+    ) {
       return undefined;
     }
 
     const showPulse = window.setTimeout(() => {
-      setPulse(challengeState?.lastWasCorrect ? "success" : "miss");
+      setPulse(challengeState.lastWasCorrect ? "success" : "miss");
     }, 0);
     const hidePulse = window.setTimeout(() => {
       setPulse(null);
@@ -132,7 +152,12 @@ export function LevelScreen({
       window.clearTimeout(showPulse);
       window.clearTimeout(hidePulse);
     };
-  }, [challengeState?.lastPoints, challengeState?.lastWasCorrect, isChallenge]);
+  }, [
+    challengeState?.hasSubmittedCurrentLevel,
+    challengeState?.lastPoints,
+    challengeState?.lastWasCorrect,
+    isChallenge,
+  ]);
 
   return (
     <main className="level-screen-shell" data-screen="game">
@@ -230,6 +255,7 @@ export function LevelScreen({
               level={level}
               pulse={pulse}
               result={result}
+              revealOutput={isOutputRevealed}
               onToggleInput={onToggleInput}
             />
             <p className="level-board-hint">
@@ -257,7 +283,7 @@ export function LevelScreen({
                   </div>
                 ))}
                 <div
-                  className={`level-mini-state level-output-state ${result ? "is-on" : ""}`}
+                  className={`level-mini-state level-output-state ${isOutputRevealed && result ? "is-on" : ""}`}
                 >
                   <span>Salida</span>
                   <strong>{outputText}</strong>
@@ -267,7 +293,8 @@ export function LevelScreen({
                 <>
                   <p className="level-feedback-copy">
                     Reto activo: razona la salida, evita probar al azar y envía
-                    cuando la señal final coincida con el objetivo.
+                    cuando la señal final coincida con el objetivo. El reloj
+                    sigue corriendo si cambias de pestaña.
                   </p>
                   {challengeState?.lastWasCorrect === true ? (
                     <div className="level-next-step is-success">
@@ -277,9 +304,9 @@ export function LevelScreen({
                   ) : null}
                   {challengeState?.lastWasCorrect === false ? (
                     <div className="level-next-step is-danger">
-                      <strong>Racha rota:</strong> la salida actual no cumple el
-                      objetivo. Revisa qué rama bloquea la señal y vuelve a
-                      enviar.
+                      <strong>Racha rota:</strong> la salida enviada no cumple el
+                      objetivo. Cambia una entrada, revisa qué rama bloquea la
+                      señal y vuelve a enviar.
                       <span className="level-pulse-status">
                         Pulso de corrección activo
                       </span>
@@ -361,6 +388,7 @@ export function LevelScreen({
                 <button
                   className="level-action-button is-primary"
                   type="button"
+                  disabled={challengeState?.submissionLocked ?? true}
                   onClick={onSubmitAnswer}
                 >
                   Enviar respuesta

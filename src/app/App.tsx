@@ -1,4 +1,12 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { evaluateCircuit } from "../core/evaluateCircuit";
 import {
   loadStoredProgress,
@@ -72,6 +80,14 @@ function createInitialInputStates(level: LevelDefinition): InputStates {
   return states;
 }
 
+function getElapsedSeconds(startedAt: number | null) {
+  if (startedAt === null) {
+    return 0;
+  }
+
+  return Math.max(0, Math.floor((performance.now() - startedAt) / 1000));
+}
+
 export function App() {
   const [screen, setScreen] = useState<Screen>("intro");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
@@ -89,11 +105,16 @@ export function App() {
   const [challengeLastWasCorrect, setChallengeLastWasCorrect] = useState<
     boolean | null
   >(null);
-  const [levelStartedAt, setLevelStartedAt] = useState(() => Date.now());
+  const [challengeHasSubmittedCurrentLevel, setChallengeHasSubmittedCurrentLevel] =
+    useState(false);
+  const [challengeSubmissionLocked, setChallengeSubmissionLocked] =
+    useState(false);
+  const [levelStartedAt, setLevelStartedAt] = useState<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [storedProgress, setStoredProgress] = useState(loadStoredProgress);
   const [challengeRunIsBest, setChallengeRunIsBest] = useState(false);
   const hasFocusedInitialScreen = useRef(false);
+  const challengeSubmissionLockRef = useRef(false);
   const totalLevels = Object.keys(levelsByDifficulty[difficulty]).length;
   const practiceTotalLevels = Object.keys(levelsByDifficulty.easy).length;
   const challengeTotalLevels = Object.keys(levelsByDifficulty.hard).length;
@@ -102,6 +123,13 @@ export function App() {
     () => evaluateCircuit(activeLevel.circuit, inputStates),
     [activeLevel, inputStates],
   );
+
+  const startLevelClock = useCallback(() => {
+    setLevelStartedAt(performance.now());
+    setElapsedSeconds(0);
+    challengeSubmissionLockRef.current = false;
+    setChallengeSubmissionLocked(false);
+  }, []);
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -120,12 +148,16 @@ export function App() {
   }, [currentLevel, screen]);
 
   useEffect(() => {
-    if (screen !== "game" || difficulty !== "hard") {
+    if (
+      screen !== "game" ||
+      difficulty !== "hard" ||
+      levelStartedAt === null
+    ) {
       return undefined;
     }
 
     const timer = window.setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - levelStartedAt) / 1000));
+      setElapsedSeconds(getElapsedSeconds(levelStartedAt));
     }, 1000);
 
     return () => window.clearInterval(timer);
@@ -139,18 +171,21 @@ export function App() {
     });
   }
 
+  function prepareLevelClock() {
+    setLevelStartedAt(null);
+    setElapsedSeconds(0);
+  }
+
   function resetChallengeRun() {
     setChallengeScore(0);
     setChallengeStreak(0);
     setChallengeWrongSubmissions(0);
     setChallengeLastPoints(null);
     setChallengeLastWasCorrect(null);
+    setChallengeHasSubmittedCurrentLevel(false);
+    challengeSubmissionLockRef.current = true;
+    setChallengeSubmissionLocked(true);
     setChallengeRunIsBest(false);
-  }
-
-  function resetLevelClock() {
-    setLevelStartedAt(Date.now());
-    setElapsedSeconds(0);
   }
 
   function startLevel(selectedDifficulty: Difficulty) {
@@ -158,7 +193,7 @@ export function App() {
     setDifficulty(selectedDifficulty);
     setCurrentLevel(firstLevel);
     setInputStates(createInitialInputStates(selectedLevel));
-    resetLevelClock();
+    prepareLevelClock();
 
     if (selectedDifficulty === "hard") {
       resetChallengeRun();
@@ -168,11 +203,19 @@ export function App() {
   }
 
   function retryLevel() {
+    if (difficulty === "hard") {
+      const firstChallengeLevel = getFirstLevel("hard");
+      setCurrentLevel(firstLevel);
+      setInputStates(createInitialInputStates(firstChallengeLevel));
+      resetChallengeRun();
+      startLevelClock();
+      return;
+    }
+
     setInputStates(createInitialInputStates(activeLevel));
-    setChallengeWrongSubmissions(0);
     setChallengeLastPoints(null);
     setChallengeLastWasCorrect(null);
-    resetLevelClock();
+    prepareLevelClock();
   }
 
   function goHome() {
@@ -180,6 +223,7 @@ export function App() {
     setDifficulty("easy");
     setCurrentLevel(firstLevel);
     setInputStates(createInitialInputStates(firstEasyLevel));
+    prepareLevelClock();
     setScreen("intro");
   }
 
@@ -196,7 +240,8 @@ export function App() {
         createInitialInputStates(levelsByDifficulty[difficulty][nextLevel]),
       );
       setChallengeWrongSubmissions(0);
-      resetLevelClock();
+      setChallengeHasSubmittedCurrentLevel(false);
+      prepareLevelClock();
       return;
     }
 
@@ -204,14 +249,30 @@ export function App() {
       persistProgress({ practiceCompletedLevels: totalLevels });
     }
 
+    prepareLevelClock();
     setScreen("results");
   }
 
   function submitChallengeAnswer() {
+    if (
+      difficulty !== "hard" ||
+      levelStartedAt === null ||
+      challengeSubmissionLockRef.current
+    ) {
+      return;
+    }
+
+    challengeSubmissionLockRef.current = true;
+    setChallengeSubmissionLocked(true);
+    setChallengeHasSubmittedCurrentLevel(true);
+
+    const submittedElapsedSeconds = getElapsedSeconds(levelStartedAt);
+    setElapsedSeconds(submittedElapsedSeconds);
+
     const scoreResult = calculateChallengeScore({
       isCorrect: result,
       levelNumber: activeLevel.levelNumber,
-      elapsedSeconds,
+      elapsedSeconds: submittedElapsedSeconds,
       wrongSubmissions: challengeWrongSubmissions,
       streak: challengeStreak,
     });
@@ -244,6 +305,14 @@ export function App() {
   }
 
   function toggleInput(input: InputName) {
+    if (difficulty === "hard") {
+      challengeSubmissionLockRef.current = false;
+      setChallengeSubmissionLocked(false);
+      setChallengeHasSubmittedCurrentLevel(false);
+      setChallengeLastPoints(null);
+      setChallengeLastWasCorrect(null);
+    }
+
     setInputStates((previous) => ({
       ...previous,
       [input]: !previous[input],
@@ -337,13 +406,17 @@ export function App() {
         totalLevels={totalLevels}
         challengeState={{
           elapsedSeconds,
+          hasSubmittedCurrentLevel: challengeHasSubmittedCurrentLevel,
           lastPoints: challengeLastPoints,
           lastWasCorrect: challengeLastWasCorrect,
           score: challengeScore,
           streak: challengeStreak,
+          submissionLocked:
+            challengeSubmissionLocked || levelStartedAt === null,
           wrongSubmissions: challengeWrongSubmissions,
         }}
         onBackToMode={() => setScreen("modeSelection")}
+        onChallengeReady={startLevelClock}
         onNextLevel={startNextLevel}
         onRetry={retryLevel}
         onSubmitAnswer={submitChallengeAnswer}

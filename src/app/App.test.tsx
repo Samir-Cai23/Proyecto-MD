@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { progressStorageKey } from "../core/progress.ts";
 import { App } from "./App";
 
@@ -17,6 +17,11 @@ describe("App", () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("starts on the welcome screen", () => {
     render(<App />);
 
@@ -136,6 +141,90 @@ describe("App", () => {
     expect(
       screen.getByRole("heading", { name: /reto 1: XOR bajo presión/i }),
     ).toBeInTheDocument();
+  });
+
+  it("restarts challenge as a fresh run without clearing stored bests", async () => {
+    window.localStorage.setItem(
+      progressStorageKey,
+      JSON.stringify({
+        version: 1,
+        practiceCompletedLevels: 7,
+        challengeCompletedLevels: 7,
+        bestChallengeScore: 5000,
+        bestChallengeStreak: 7,
+      }),
+    );
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /iniciar reto/i }));
+    await screen.findByRole("button", { name: /entrada a/i });
+
+    solveChallengeLevel(["a", "c"]);
+
+    expect(
+      await screen.findByRole("heading", { name: /reto 2: OR bajo presión/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("region", { name: /estado del reto/i })).getByText(
+        "x1",
+      ),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /reiniciar/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /reto 1: XOR bajo presión/i }),
+    ).toBeInTheDocument();
+    const resetHud = screen.getByRole("region", { name: /estado del reto/i });
+    expect(within(resetHud).getByText("00:00")).toBeInTheDocument();
+    expect(within(resetHud).getByText("0")).toBeInTheDocument();
+    expect(within(resetHud).getByText("x0")).toBeInTheDocument();
+    expect(
+      JSON.parse(window.localStorage.getItem(progressStorageKey) ?? "{}"),
+    ).toMatchObject({
+      challengeCompletedLevels: 7,
+      bestChallengeScore: 5000,
+      bestChallengeStreak: 7,
+    });
+  });
+
+  it("reveals a challenge result only on submit and ignores repeated submissions until inputs change", async () => {
+    vi.spyOn(performance, "now").mockReturnValue(1000);
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
+    fireEvent.click(screen.getByRole("button", { name: /iniciar reto/i }));
+
+    expect(
+      await screen.findByRole("img", {
+        name: /salida oculta hasta enviar respuesta/i,
+      }),
+    ).toBeInTheDocument();
+
+    const submit = screen.getByRole("button", { name: /enviar respuesta/i });
+    fireEvent.click(submit);
+
+    expect(
+      screen.getByRole("img", { name: /salida actual 0/i }),
+    ).toBeInTheDocument();
+    expect(submit).toBeDisabled();
+
+    fireEvent.click(submit);
+    fireEvent.click(screen.getByRole("button", { name: /entrada a/i }));
+    fireEvent.click(screen.getByRole("button", { name: /entrada c/i }));
+
+    expect(
+      screen.getByRole("img", {
+        name: /salida oculta hasta enviar respuesta/i,
+      }),
+    ).toBeInTheDocument();
+    expect(submit).toBeEnabled();
+
+    fireEvent.click(submit);
+
+    expect(await screen.findByText(/\+1320 puntos/i)).toBeInTheDocument();
   });
 
   it("uses circuit input nodes as the primary controls", async () => {

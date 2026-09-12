@@ -14,6 +14,7 @@ type CircuitBoardProps = {
   level: LevelDefinition;
   pulse: "miss" | "success" | null;
   result: boolean;
+  revealOutput?: boolean;
   onToggleInput: (input: InputName) => void;
 };
 
@@ -39,6 +40,7 @@ type InputNodeProps = {
 
 type OutputNodeProps = {
   isActive: boolean;
+  isRevealed: boolean;
   x: number;
   y: number;
 };
@@ -109,11 +111,13 @@ function InputNode({ input, isActive, x, y }: InputNodeProps) {
   );
 }
 
-function OutputNode({ isActive, x, y }: OutputNodeProps) {
+function OutputNode({ isActive, isRevealed, x, y }: OutputNodeProps) {
+  const outputState = isRevealed ? (isActive ? "is-on" : "is-off") : "";
+
   return (
     <g>
       <rect
-        className={`level-led ${isActive ? "is-on" : ""}`}
+        className={`level-led ${isRevealed && isActive ? "is-on" : ""}`}
         x={x}
         y={y - 41}
         width="82"
@@ -121,14 +125,16 @@ function OutputNode({ isActive, x, y }: OutputNodeProps) {
         rx="20"
       />
       <text
-        className={`level-svg-label level-output-text ${isActive ? "is-on" : "is-off"}`}
+        className={`level-svg-label level-output-text ${outputState}`}
         x={x + 30}
         y={y + 11}
       >
-        {formatValue(isActive)}
+        {isRevealed ? formatValue(isActive) : "?"}
       </text>
       <text className="level-svg-small" x={x - 10} y={y + 74}>
-        Salida {isActive ? "encendida" : "apagada"}
+        {isRevealed
+          ? `Salida ${isActive ? "encendida" : "apagada"}`
+          : "Salida oculta"}
       </text>
     </g>
   );
@@ -238,7 +244,7 @@ function renderPracticeBoard(
       })}
       <SignalWire d={`M${outputStart} 220 H704`} isActive={result} />
       <GateNode gate={gate} isActive={result} x={gateX} y={gateY} />
-      <OutputNode isActive={result} x={704} y={220} />
+      <OutputNode isActive={result} isRevealed x={704} y={220} />
     </>
   );
 }
@@ -291,6 +297,7 @@ function renderChallengeTree(
   inputStates: InputStates,
   inputPositions: Partial<Record<InputName, number>>,
   maxDepth: number,
+  revealRootResult: boolean,
   depth = 0,
   keyPrefix = "root",
 ): TreeSource {
@@ -311,6 +318,7 @@ function renderChallengeTree(
       inputStates,
       inputPositions,
       maxDepth,
+      revealRootResult,
       depth + 1,
       `${keyPrefix}-${index}`,
     ),
@@ -342,7 +350,7 @@ function renderChallengeTree(
       ...wireElements,
       <GateNode
         gate={node.gate}
-        isActive={gateValue}
+        isActive={(depth > 0 || revealRootResult) && gateValue}
         key={`${keyPrefix}-${node.gate}`}
         x={gateX}
         y={gateY}
@@ -358,6 +366,7 @@ function renderChallengeBoard(
   level: LevelDefinition,
   inputStates: InputStates,
   result: boolean,
+  revealOutput: boolean,
 ) {
   const yPositions = getInputYPositions(level.inputs.length);
   const inputPositions = Object.fromEntries(
@@ -369,6 +378,7 @@ function renderChallengeBoard(
     inputStates,
     inputPositions,
     maxDepth,
+    revealOutput,
   );
 
   return (
@@ -383,8 +393,16 @@ function renderChallengeBoard(
         />
       ))}
       {tree.elements}
-      <SignalWire d={`M${tree.x} ${tree.y} H744`} isActive={result} />
-      <OutputNode isActive={result} x={744} y={tree.y} />
+      <SignalWire
+        d={`M${tree.x} ${tree.y} H744`}
+        isActive={revealOutput && result}
+      />
+      <OutputNode
+        isActive={result}
+        isRevealed={revealOutput}
+        x={744}
+        y={tree.y}
+      />
     </>
   );
 }
@@ -393,12 +411,13 @@ function renderFallbackBoard(
   level: LevelDefinition,
   inputStates: InputStates,
   result: boolean,
+  revealOutput: boolean,
 ) {
   if (level.gates.length === 1) {
     return renderPracticeBoard(level, inputStates, result);
   }
 
-  return renderChallengeBoard(level, inputStates, result);
+  return renderChallengeBoard(level, inputStates, result, revealOutput);
 }
 
 function getInputNodeHotspots(level: LevelDefinition) {
@@ -422,10 +441,19 @@ export function CircuitBoard({
   level,
   pulse,
   result,
+  revealOutput = true,
   onToggleInput,
 }: CircuitBoardProps) {
   const outputText = formatValue(result);
-  const boardContent = renderFallbackBoard(level, inputStates, result);
+  const outputDescription = revealOutput
+    ? `Salida actual ${outputText}`
+    : "Salida oculta hasta enviar respuesta";
+  const boardContent = renderFallbackBoard(
+    level,
+    inputStates,
+    result,
+    revealOutput,
+  );
   const inputHotspots = getInputNodeHotspots(level);
 
   return (
@@ -434,7 +462,7 @@ export function CircuitBoard({
         <svg
           viewBox="0 0 860 480"
           role="img"
-          aria-label={`${heading}. Salida actual ${outputText}. Entradas: ${level.inputs
+          aria-label={`${heading}. ${outputDescription}. Entradas: ${level.inputs
             .map((input) => `${input} igual ${formatValue(inputStates[input])}`)
             .join(", ")}.`}
         >

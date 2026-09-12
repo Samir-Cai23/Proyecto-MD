@@ -76,6 +76,13 @@ button {
     touch-action: manipulation;
 }
 
+button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
 button:focus-visible,
 [role="button"]:focus-visible,
 a:focus-visible {
