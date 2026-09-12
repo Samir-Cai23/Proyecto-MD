@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CircuitBoard } from "../components/CircuitBoard/CircuitBoard";
 import { getPracticeFeedback } from "../core/feedback";
 import { generateTruthTable } from "../core/truthTable";
@@ -102,7 +102,7 @@ export function LevelScreen({
   const [pulse, setPulse] = useState<PulseKind | null>(null);
   const hasMounted = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isChallenge) {
       onChallengeReady?.();
     }
@@ -391,9 +391,7 @@ export function LevelScreen({
                   disabled={challengeState?.submissionLocked ?? true}
                   onClick={onSubmitAnswer}
                 >
-                  {challengeState?.submissionLocked
-                    ? "Cambia una entrada"
-                    : "Enviar respuesta"}
+                  Enviar respuesta
                 </button>
               ) : result ? (
                 <button
