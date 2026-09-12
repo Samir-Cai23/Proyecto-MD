@@ -5,9 +5,9 @@
 ![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=061018)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-34_tests-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-35%2F35_tests-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-Production-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![Accessibility](https://img.shields.io/badge/Accessibility-100%2F100-success?style=for-the-badge)
+![Lighthouse accessibility audit](https://img.shields.io/badge/Lighthouse_Accessibility-100%2F100-success?style=for-the-badge)
 
 <br />
 
@@ -29,7 +29,7 @@
 
 ## Project Overview
 
-**Lógica Digital** is a production-ready educational web app for learning digital logic gates through interactive SVG circuits, signal feedback, guided practice, and a timed challenge mode.
+**Lógica Digital** is a production-deployed educational web app for learning digital logic gates through interactive SVG circuits, signal feedback, guided practice, and a timed challenge mode.
 
 | Challenge | Solution | Impact |
 | --- | --- | --- |
@@ -59,14 +59,14 @@
 - **Educational feedback** explaining the current input row, gate rule, hint, and target truth-table rows.
 - **Truth tables** in practice mode to connect each circuit with formal logic.
 - **Local progress** for completed practice levels, challenge progress, best score, and best streak.
-- **Accessible UI** with semantic structure, skip links, focus management, ARIA announcements, keyboard support, visible focus, and reduced-motion handling.
+- **Accessibility foundations** with semantic structure, skip links, focus management, ARIA announcements, keyboard support, visible focus, and reduced-motion handling.
 - **Production hardening** with sitemap, robots.txt, security headers, immutable asset caching, and optimized local fonts.
 
 ---
 
 ## Quality Snapshot
 
-Latest production audit target:
+Latest automated Lighthouse production audit target:
 
 ```text
 https://logis-gates-challenge-game.vercel.app/
@@ -79,6 +79,8 @@ https://logis-gates-challenge-game.vercel.app/
 | Best Practices | 100 |
 | SEO | 100 |
 
+`Accessibility 100` is the Lighthouse automated audit score, not a claim of complete WCAG or assistive-technology conformance.
+
 Validation used during release work:
 
 ```sh
@@ -88,6 +90,8 @@ npm run build
 npm audit --audit-level=high
 git --no-pager diff --check
 ```
+
+Current automated test baseline: **35/35 passing**.
 
 Manual checks include console, responsive widths (`320`, `375`, `768`, `1024`, `1365`, `1440`), keyboard/focus behavior, tap target size, sitemap XML, robots.txt, and Vercel headers.
 
